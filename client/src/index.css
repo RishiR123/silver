@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design tokens ─────────────────────────────────────── */
+:root {
+  /* shadcn base tokens */
+  --background:             0 0%  0%;
+  --foreground:             0 0%  98%;
+  --muted:                  0 0%  10%;
+  --muted-foreground:       0 0%  45%;
+  --popover:                0 0%  4%;
+  --popover-foreground:     0 0%  98%;
+  --border:                 0 0%  15%;
+  --input:                  0 0%  15%;
+  --accent:                 0 0%  15%;
+  --accent-foreground:      0 0%  98%;
+  --destructive:            0 62.8% 30.6%;
+  --destructive-foreground: 0 0%  98%;
+  --ring:                   0 0%  83.1%;
+  --primary:                0 0%  98%;
+  --primary-foreground:     0 0%  9%;
+  --secondary:              0 0%  15%;
+  --secondary-foreground:   0 0%  98%;
+  --ring-offset-background: 0 0%  0%;
+
+  /* Silver gradient animation timing */
+  --silver-spin-duration: 3s;
+
+  /* ── Semantic surface scale ────────────────────────────── */
+  --surface:          0 0%  0%;      /* app / sidebar bg      */
+  --surface-raised:   0 0%  3.9%;   /* brain panel           */
+  --surface-card:     0 0%  9%;     /* code blocks, tables   */
+  --surface-overlay:  0 0%  15.9%;  /* user msg, inline code */
+
+  /* ── Ink / text scale ─────────────────────────────────── */
+  --ink-1:  0 0%  98%;   /* primary text   ≈ zinc-50  */
+  --ink-2:  0 0%  90%;   /* secondary      ≈ zinc-200 */
+  --ink-3:  0 0%  83.9%; /* tertiary       ≈ zinc-300 */
+  --ink-4:  0 0%  63.9%; /* dim            ≈ zinc-400 */
+  --ink-5:  0 0%  46.1%; /* muted          ≈ zinc-500 */
+  --ink-6:  0 0%  43.9%; /* faint          ≈ zinc-600 */
+  --ink-7:  0 0%  33.9%; /* ghost          ≈ zinc-700 */
+
+  /* ── Border scale ─────────────────────────────────────── */
+  --line-strong:    0 0%  33.9%;  /* ≈ zinc-700             */
+  --line-mid:       0 0%  15.9%;  /* ≈ zinc-800             */
+  --line-subtle:    0 0%  9%;     /* sidebar / panel border */
+  --line-connector: 0 0%  20%;    /* dashed tool connector  */
+
+  /* ── Interactive state fills ──────────────────────────── */
+  --ui-hover:   0 0%  12%;
+  --ui-active:  0 0%  16%;
+
+  /* ── File tree branch lines (alpha values) ────────────── */
+  --tree-line:       rgba(255,255,255,0.08);
+  --tree-line-hover: rgba(255,255,255,0.20);
+}
+
+/* ─── Light mode overrides ──────────────────────────────── */
+@media (prefers-color-scheme: light) {
+  :root {
+    --background:             0 0%  100%;
+    --foreground:             0 0%  4%;
+    --muted:                  0 0%  92%;
+    --muted-foreground:       0 0%  46%;
+    --popover:                0 0%  98%;
+    --popover-foreground:     0 0%  4%;
+    --border:                 0 0%  82%;
+    --input:                  0 0%  82%;
+    --accent:                 0 0%  92%;
+    --accent-foreground:      0 0%  4%;
+    --destructive:            0 72%  50%;
+    --destructive-foreground: 0 0%  98%;
+    --ring:                   0 0%  20%;
+    --primary:                0 0%  4%;
+    --primary-foreground:     0 0%  98%;
+    --secondary:              0 0%  92%;
+    --secondary-foreground:   0 0%  4%;
+    --ring-offset-background: 0 0%  100%;
+
+    --surface:          0 0%  100%;
+    --surface-raised:   0 0%  97%;
+    --surface-card:     0 0%  93%;
+    --surface-overlay:  0 0%  88%;
+
+    --ink-1:  0 0%  4%;
+    --ink-2:  0 0%  10%;
+    --ink-3:  0 0%  20%;
+    --ink-4:  0 0%  38%;
+    --ink-5:  0 0%  46%;
+    --ink-6:  0 0%  55%;
+    --ink-7:  0 0%  65%;
+
+    --line-strong:    0 0%  70%;
+    --line-mid:       0 0%  82%;
+    --line-subtle:    0 0%  91%;
+    --line-connector: 0 0%  80%;
+
+    --ui-hover:   0 0%  90%;
+    --ui-active:  0 0%  85%;
+
+    --tree-line:       rgba(0,0,0,0.10);
+    --tree-line-hover: rgba(0,0,0,0.20);
+  }
+}
+
+/* ─── Base reset ────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  border-color: hsl(var(--border));
+}
+
+body {
+  margin: 0;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Animated silver border ────────────────────────────── */
+
+/* Register the custom angle property so CSS can animate it */
+@property --border-rotate {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes silver-spin {
+  100% { --border-rotate: 360deg; }
+}
+
+/*
+  Outer ring — slightly brighter highlights for a fine-line look.
+  The gradient simulates one main light source sweeping around the ring.
+*/
+.silver-border-outer {
+  animation: silver-spin var(--silver-spin-duration) linear infinite;
+  background: conic-gradient(
+    from var(--border-rotate) at 50% 50%,
+    #ffffff  0deg,
+    #d8d8d8  35deg,
+    #a0a0a0  80deg,
+    #505050  130deg,
+    #282828  180deg,
+    #505050  230deg,
+    #a0a0a0  280deg,
+    #e8e8e8  325deg,
+    #ffffff  360deg
+  );
+}
+
+/*
+  Inner ring (thicker 2 px fill) — one shade deeper than the outer
+  so the layered border reads as a single metallic ring with depth.
+*/
+.silver-border-inner {
+  animation: silver-spin var(--silver-spin-duration) linear infinite;
+  background: conic-gradient(
+    from var(--border-rotate) at 50% 50%,
+    #ececec  0deg,
+    #c4c4c4  35deg,
+    #8c8c8c  80deg,
+    #424242  130deg,
+    #1e1e1e  180deg,
+    #424242  230deg,
+    #8c8c8c  280deg,
+    #d4d4d4  325deg,
+    #ececec  360deg
+  );
+}

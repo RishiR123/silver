@@ -1,0 +1,16 @@
+{
+  "name": "silver-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "main": "electron-main/main.cjs",
+  "scripts": {
+    "dev": "SILVER_WORKSPACE=${SILVER_WORKSPACE:-$HOME} concurrently -n client,server -c cyan,yellow \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "build": "npm run build --prefix client",
+    "install:all": "npm install --prefix client && npm install --prefix server",
+    "electron:dev": "SILVER_WORKSPACE=${SILVER_WORKSPACE:-$HOME} concurrently -n server,electron -c yellow,magenta \"npm run dev --prefix server\" \"env -u ELECTRON_RUN_AS_NODE npm run electron:dev --prefix client\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "wait-on": "^9.0.10"
+  }
+}
